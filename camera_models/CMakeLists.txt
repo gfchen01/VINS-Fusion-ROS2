@@ -15,7 +15,8 @@ find_package(Boost REQUIRED COMPONENTS filesystem program_options system)
 include_directories(${Boost_INCLUDE_DIRS})
 
 find_package(OpenCV REQUIRED)
-find_package(Ceres REQUIRED)
+find_package(Ceres 2.1.0 EXACT REQUIRED)
+MESSAGE(WARNING "Ceres version: ${CERES_VERSION}")
 include_directories(${CERES_INCLUDE_DIRS})
 
 

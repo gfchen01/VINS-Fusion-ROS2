@@ -15,7 +15,7 @@ find_package(nav_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 
-find_package(Ceres REQUIRED)
+find_package(Ceres 2.1.0 EXACT REQUIRED)
 
 add_subdirectory(./ThirdParty/GeographicLib/)
 

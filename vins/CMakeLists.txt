@@ -22,7 +22,7 @@ find_package(image_transport REQUIRED)
 
 
 find_package(OpenCV REQUIRED)
-find_package(Ceres REQUIRED)
+find_package(Ceres 2.1.0 EXACT REQUIRED)
 
 include_directories(${CERES_INCLUDE_DIRS})
 

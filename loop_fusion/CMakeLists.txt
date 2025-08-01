@@ -17,7 +17,7 @@ find_package(cv_bridge REQUIRED)
 find_package(camera_models REQUIRED)
 
 find_package(OpenCV)
-find_package(Ceres REQUIRED)
+find_package(Ceres 2.1.0 EXACT REQUIRED)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 find_package(Eigen3)
 
