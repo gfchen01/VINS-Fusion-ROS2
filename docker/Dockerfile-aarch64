@@ -1,10 +1,10 @@
-FROM ros:humble-ros-base
+FROM arm64v8/ros:humble
 # VINS-Fusion Dockerfile for ROS2 Humble
 
 ENV CERES_VERSION="2.1.0"
 ENV COLCON_WS=/root/colcon_ws
 
-      # set up thread number for building
+# set up thread number for building
 RUN   if [ "x$(nproc)" = "x1" ] ; then export USE_PROC=1 ; \
       else export USE_PROC=$(($(nproc)/2)) ; fi && \
       apt-get update && apt-get install -y \
@@ -27,7 +27,7 @@ RUN   if [ "x$(nproc)" = "x1" ] ; then export USE_PROC=1 ; \
       cmake .. && \
       make -j$(USE_PROC) install && \
       rm -rf ../../ceres-solver && \
-      mkdir -p $COLCON_WS/src/ && \
+      mkdir -p $COLCON_WS/src/
 
 RUN   bash -c "echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> ~/.bashrc"
 

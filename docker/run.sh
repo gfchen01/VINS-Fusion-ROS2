@@ -101,17 +101,13 @@ while getopts "hglk" opt; do
 done
 
 if [ $KITTI -eq 0 ]; then
-    CONFIG_IN_DOCKER="/root/catkin_ws/src/VINS-Fusion/$(relativePath $(absPath ..) $(absPath ${*: -1}))"
+    CONFIG_IN_DOCKER="/root/colcon_ws/src/VINS-Fusion/$(relativePath $(absPath ..) $(absPath ${*: -1}))"
 else
-    CONFIG_IN_DOCKER="/root/catkin_ws/src/VINS-Fusion/$(relativePath $(absPath ..) $(absPath ${*: -2:1}))"
+    CONFIG_IN_DOCKER="/root/colcon_ws/src/VINS-Fusion/$(relativePath $(absPath ..) $(absPath ${*: -2:1}))"
     KITTI_DATASET="$(absPath ${*: -1})"
 fi
 
-roscore &
-ROSCORE_PID=$!
-sleep 1
-
-rviz -d ../config/vins_rviz_config.rviz &
+rviz2 -d ../config/vins_rviz_config.rviz &
 RVIZ_PID=$!
 
 VINS_FUSION_DIR=$(absPath "..")
@@ -121,95 +117,85 @@ if [ $KITTI -eq 0 ]; then
         docker run \
         -it \
         --rm \
-        --net=host \
-        -v ${VINS_FUSION_DIR}:/root/catkin_ws/src/VINS-Fusion/ \
-        ros:vins-fusion \
+        # --net=host \
+        # -v ${VINS_FUSION_DIR}:/root/colcon_ws/src/VINS-Fusion/ \
+        ros2:vins-fusion \
         /bin/bash -c \
-        "cd /root/catkin_ws/; \
-        catkin config \
-                --env-cache \
-                --extend /opt/ros/$ROS_DISTRO \
-            --cmake-args \
-                -DCMAKE_BUILD_TYPE=Release; \
-            catkin build; \
-            source devel/setup.bash; \
-            rosrun vins vins_node ${CONFIG_IN_DOCKER}"
+        "cd /root/colcon_ws/; \
+        # colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release; \
+        source install/setup.bash; \
+        ros2 run vins vins_node ${CONFIG_IN_DOCKER}"
     else
         docker run \
         -it \
         --rm \
-        --net=host \
-        -v ${VINS_FUSION_DIR}:/root/catkin_ws/src/VINS-Fusion/ \
-        ros:vins-fusion \
+        # --net=host \
+        # -v ${VINS_FUSION_DIR}:/root/colcon_ws/src/VINS-Fusion/ \
+        ros2:vins-fusion \
         /bin/bash -c \
-        "cd /root/catkin_ws/; \
-        catkin config \
-                --env-cache \
-                --extend /opt/ros/$ROS_DISTRO \
-            --cmake-args \
-                -DCMAKE_BUILD_TYPE=Release; \
-            catkin build; \
-            source devel/setup.bash; \
-            rosrun loop_fusion loop_fusion_node ${CONFIG_IN_DOCKER} & \
-            rosrun vins vins_node ${CONFIG_IN_DOCKER}"
+        "cd /root/colcon_ws/; \
+        # colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release; \
+        source install/setup.bash; \
+        ros2 run loop_fusion loop_fusion_node ${CONFIG_IN_DOCKER} & \
+        ros2 run vins vins_node ${CONFIG_IN_DOCKER}"
     fi
 else
     if [ $LOOP_FUSION -eq 1 ]; then
         docker run \
         -it \
         --rm \
-        --net=host \
-        -v ${VINS_FUSION_DIR}:/root/catkin_ws/src/VINS-Fusion/ \
-        -v ${KITTI_DATASET}:/root/kitti_dataset/ \
-        ros:vins-fusion \
+        # --net=host \
+        # -v ${VINS_FUSION_DIR}:/root/colcon_ws/src/VINS-Fusion/ \
+        ros2:vins-fusion \
         /bin/bash -c \
-        "cd /root/catkin_ws/; \
-        catkin config \
-                --env-cache \
-                --extend /opt/ros/$ROS_DISTRO \
-            --cmake-args \
-                -DCMAKE_BUILD_TYPE=Release; \
-            catkin build; \
-            source devel/setup.bash; \
-            rosrun loop_fusion loop_fusion_node ${CONFIG_IN_DOCKER} & \
-            rosrun vins kitti_odom_test ${CONFIG_IN_DOCKER} /root/kitti_dataset/"
+        "cd /root/colcon_ws/; \
+        # colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release; \
+        source install/setup.bash; \
+        ros2 run loop_fusion loop_fusion_node ${CONFIG_IN_DOCKER} & \
+        ros2 run vins vins_node ${CONFIG_IN_DOCKER}"
+    fi
+else
+    if [ $LOOP_FUSION -eq 1 ]; then
+        docker run \
+        -it \
+        --rm \
+        # --net=host \
+        # -v ${VINS_FUSION_DIR}:/root/colcon_ws/src/VINS-Fusion/ \
+        -v ${KITTI_DATASET}:/root/kitti_dataset/ \
+        ros2:vins-fusion \
+        /bin/bash -c \
+        "cd /root/colcon_ws/; \
+        # colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release; \
+        source install/setup.bash; \
+        ros2 run loop_fusion loop_fusion_node ${CONFIG_IN_DOCKER} & \
+        ros2 run vins kitti_odom_test ${CONFIG_IN_DOCKER} /root/kitti_dataset/"
     elif [ $GLOBAL_FUSION -eq 1 ]; then
         docker run \
         -it \
         --rm \
-        --net=host \
-        -v ${VINS_FUSION_DIR}:/root/catkin_ws/src/VINS-Fusion/ \
+        # --net=host \
+        -v ${VINS_FUSION_DIR}:/root/colcon_ws/src/VINS-Fusion/ \
         -v ${KITTI_DATASET}:/root/kitti_dataset/ \
-        ros:vins-fusion \
+        ros2:vins-fusion \
         /bin/bash -c \
-        "cd /root/catkin_ws/; \
-        catkin config \
-                --env-cache \
-                --extend /opt/ros/$ROS_DISTRO \
-            --cmake-args \
-                -DCMAKE_BUILD_TYPE=Release; \
-            catkin build; \
-            source devel/setup.bash; \
-            rosrun global_fusion global_fusion_node & \
-            rosrun vins kitti_gps_test ${CONFIG_IN_DOCKER} /root/kitti_dataset/"
+        "cd /root/colcon_ws/; \
+        # colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release; \
+        source install/setup.bash; \
+        ros2 run global_fusion global_fusion_node & \
+        ros2 run vins kitti_gps_test ${CONFIG_IN_DOCKER} /root/kitti_dataset/"
     else
         docker run \
         -it \
         --rm \
         --net=host \
-        -v ${VINS_FUSION_DIR}:/root/catkin_ws/src/VINS-Fusion/ \
+        -v ${VINS_FUSION_DIR}:/root/colcon_ws/src/VINS-Fusion/ \
         -v ${KITTI_DATASET}:/root/kitti_dataset/ \
-        ros:vins-fusion \
+        ros2:vins-fusion \
         /bin/bash -c \
-        "cd /root/catkin_ws/; \
-        catkin config \
-                --env-cache \
-                --extend /opt/ros/$ROS_DISTRO \
-            --cmake-args \
-                -DCMAKE_BUILD_TYPE=Release; \
-            catkin build; \
-            source devel/setup.bash; \
-            rosrun vins kitti_odom_test ${CONFIG_IN_DOCKER} /root/kitti_dataset/"
+        "cd /root/colcon_ws/; \
+        # colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release; \
+        source install/setup.bash; \
+        ros2 run vins kitti_odom_test ${CONFIG_IN_DOCKER} /root/kitti_dataset/"
     fi
 fi
 

@@ -10,7 +10,7 @@ help:
 	@echo ""
 
 build:
-	@docker build --tag ros:vins-fusion -f ./Dockerfile ..
+	@docker build --tag ros-humble:vins-fusion -f ./Dockerfile ..
 
 clean:
-	@docker rmi -f ros:vins-fusion
+	@docker rmi -f ros-humble:vins-fusion
