@@ -15,7 +15,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ../../:/root/colcon_ws/src
-      - /home/${USER}/guofei/dex_control:/root/dex_control:rw
+      - /home/${USER}/guofei/dexcontrol:/root/dexcontrol:rw
       - /dev:/dev
       
     # disabled for ros2 communication. See: https://github.com/eProsima/Fast-DDS/issues/5396#issuecomment-2493358758
