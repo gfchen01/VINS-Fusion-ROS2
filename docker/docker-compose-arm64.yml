@@ -2,10 +2,11 @@ version: '3.8'
 
 services:
   vins-fusion:
-    build:
-      context: .
-      dockerfile: Dockerfile-aarch64
-    container_name: vins-fusion-humble-aarch64
+    image: lukechen01/vins-humble-arm64:latest
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile-arm64
+    container_name: vins-fusion-humble-arm64
     stdin_open: true
     tty: true
     environment:
@@ -16,9 +17,9 @@ services:
       - ../../:/root/colcon_ws/src
       
     # disabled for ros2 communication. See: https://github.com/eProsima/Fast-DDS/issues/5396#issuecomment-2493358758
-    # network_mode: "host"
-    # ipc: "host"
-    # pid: "host"
+    network_mode: host
+    ipc: host
+    pid: host
     privileged: true
     working_dir: /root/colcon_ws
     # Enabling Nvidia GPUs
