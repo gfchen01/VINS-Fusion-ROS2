@@ -17,6 +17,7 @@ services:
       - ../../:/root/colcon_ws/src
       - /home/${USER}/guofei/dexcontrol:/root/dexcontrol:rw
       - /dev:/dev
+      - /home/${USER}/.dexmate:/root/.dexmate:r
       
     # disabled for ros2 communication. See: https://github.com/eProsima/Fast-DDS/issues/5396#issuecomment-2493358758
     network_mode: host
