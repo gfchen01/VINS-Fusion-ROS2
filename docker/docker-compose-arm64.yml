@@ -16,6 +16,7 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ../../:/root/colcon_ws/src
       - /home/${USER}/guofei/dexcontrol:/root/dexcontrol:rw
+      - /home/${USER}/guofei/dexsensor:/root/dexsensor:rw
       - /dev:/dev
       
     # disabled for ros2 communication. See: https://github.com/eProsima/Fast-DDS/issues/5396#issuecomment-2493358758
